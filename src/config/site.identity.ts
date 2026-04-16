@@ -1,10 +1,10 @@
 export const siteIdentity = {
   code: process.env.NEXT_PUBLIC_SITE_CODE || 'cy6v8q2m4x',
   name: process.env.NEXT_PUBLIC_SITE_NAME || 'Choose Your Car',
-  tagline: process.env.NEXT_PUBLIC_SITE_TAGLINE || 'Marketplace discovery platform',
+  tagline: process.env.NEXT_PUBLIC_SITE_TAGLINE || 'Compare listings and browse active auto deals',
   description:
     process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
-    'A utility-first platform for business listings, local opportunities, and classified discovery.',
+    'A structured automotive discovery platform combining business listings with active classified inventory.',
   domain: process.env.NEXT_PUBLIC_SITE_DOMAIN || 'choose-your-car.com',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://choose-your-car.com',
   ogImage: process.env.NEXT_PUBLIC_SITE_OG_IMAGE || '/og-default.png',
