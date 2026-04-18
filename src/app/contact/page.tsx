@@ -9,11 +9,11 @@ import { CONTACT_PAGE_OVERRIDE_ENABLED, ContactPageOverride } from '@/overrides/
 function getTone(kind: ReturnType<typeof getProductKind>) {
   if (kind === 'directory') {
     return {
-      shell: 'bg-[#f8fbff] text-slate-950',
-      panel: 'border border-slate-200 bg-white',
-      soft: 'border border-slate-200 bg-slate-50',
-      muted: 'text-slate-600',
-      action: 'bg-slate-950 text-white hover:bg-slate-800',
+      shell: 'bg-[linear-gradient(180deg,#FEFDDF_0%,#fff9ef_52%,#ffffff_100%)] text-[#1f2d3a]',
+      panel: 'border border-[#73A5CA]/22 bg-white shadow-[0_16px_40px_rgba(31,45,58,0.08)]',
+      soft: 'border border-[#73A5CA]/20 bg-[#FEFDDF]',
+      muted: 'text-[#456883]',
+      action: 'bg-[#E87F24] text-[#FEFDDF] hover:bg-[#cc6b1c]',
     }
   }
   if (kind === 'editorial') {
@@ -80,29 +80,83 @@ export default function ContactPage() {
     <div className={`min-h-screen ${tone.shell}`}>
       <NavbarShell />
       <main className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <section className={`mb-8 rounded-[2rem] border p-7 sm:p-9 ${tone.panel}`}>
+          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#4c6f88]">Contact {SITE_CONFIG.name}</p>
+              <h1 className="mt-4 text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">Need help with listings, classifieds, or account support?</h1>
+              <p className={`mt-5 max-w-2xl text-sm leading-8 ${tone.muted}`}>
+                Share your issue once and we route it to the right team quickly. We focus on practical next steps, not generic support replies.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                {['Fast routing', 'Local business support', 'Clear response path'].map((item) => (
+                  <span key={item} className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] ${tone.soft}`}>
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {[
+                { value: '< 2h', label: 'First response' },
+                { value: '24/7', label: 'Issue monitoring' },
+                { value: '97%', label: 'Resolved tickets' },
+              ].map((metric) => (
+                <div key={metric.label} className={`rounded-2xl p-4 ${tone.soft}`}>
+                  <p className="text-2xl font-semibold">{metric.value}</p>
+                  <p className={`mt-1 text-xs uppercase tracking-[0.12em] ${tone.muted}`}>{metric.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Contact {SITE_CONFIG.name}</p>
-            <h1 className="mt-4 text-5xl font-semibold tracking-[-0.05em]">A support page that matches the product, not a generic contact form.</h1>
-            <p className={`mt-5 max-w-2xl text-sm leading-8 ${tone.muted}`}>Tell us what you are trying to publish, fix, or launch. We will route it through the right lane instead of forcing every request into the same support bucket.</p>
-            <div className="mt-8 space-y-4">
+            <h2 className="text-2xl font-semibold tracking-[-0.03em]">Choose the right support lane</h2>
+            <p className={`mt-3 text-sm leading-7 ${tone.muted}`}>
+              Pick the closest category below and include relevant details in your message for faster resolution.
+            </p>
+            <div className="mt-6 space-y-4">
               {lanes.map((lane) => (
                 <div key={lane.title} className={`rounded-[1.6rem] p-5 ${tone.soft}`}>
-                  <lane.icon className="h-5 w-5" />
+                  <lane.icon className="h-5 w-5 text-[#E87F24]" />
                   <h2 className="mt-3 text-xl font-semibold">{lane.title}</h2>
                   <p className={`mt-2 text-sm leading-7 ${tone.muted}`}>{lane.body}</p>
                 </div>
               ))}
             </div>
+            <div className={`mt-6 rounded-[1.6rem] p-5 ${tone.panel}`}>
+              <h3 className="text-lg font-semibold">Include these details</h3>
+              <ul className={`mt-3 space-y-2 text-sm ${tone.muted}`}>
+                <li className="rounded-xl border border-[#73A5CA]/18 bg-[#FEFDDF]/70 px-3 py-2">Profile email and role</li>
+                <li className="rounded-xl border border-[#73A5CA]/18 bg-[#FEFDDF]/70 px-3 py-2">Relevant listing or post URL</li>
+                <li className="rounded-xl border border-[#73A5CA]/18 bg-[#FEFDDF]/70 px-3 py-2">Exact issue and expected outcome</li>
+                <li className="rounded-xl border border-[#73A5CA]/18 bg-[#FEFDDF]/70 px-3 py-2">Screenshots or timeline if available</li>
+              </ul>
+            </div>
           </div>
 
           <div className={`rounded-[2rem] p-7 ${tone.panel}`}>
             <h2 className="text-2xl font-semibold">Send a message</h2>
+            <p className={`mt-2 text-sm ${tone.muted}`}>We usually respond within one business day.</p>
             <form className="mt-6 grid gap-4">
-              <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="Your name" />
-              <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="Email address" />
-              <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="What do you need help with?" />
-              <textarea className="min-h-[180px] rounded-2xl border border-current/10 bg-transparent px-4 py-3 text-sm" placeholder="Share the full context so we can respond with the right next step." />
+              <label className="grid gap-2 text-sm font-medium">
+                Name
+                <input className="h-12 rounded-xl border border-[#73A5CA]/22 bg-[#FEFDDF]/60 px-4 text-sm outline-none focus:border-[#E87F24]" placeholder="Your name" />
+              </label>
+              <label className="grid gap-2 text-sm font-medium">
+                Email address
+                <input className="h-12 rounded-xl border border-[#73A5CA]/22 bg-[#FEFDDF]/60 px-4 text-sm outline-none focus:border-[#E87F24]" placeholder="Email address" />
+              </label>
+              <label className="grid gap-2 text-sm font-medium">
+                Subject
+                <input className="h-12 rounded-xl border border-[#73A5CA]/22 bg-[#FEFDDF]/60 px-4 text-sm outline-none focus:border-[#E87F24]" placeholder="What do you need help with?" />
+              </label>
+              <label className="grid gap-2 text-sm font-medium">
+                Message
+                <textarea className="min-h-[180px] rounded-2xl border border-[#73A5CA]/22 bg-[#FEFDDF]/60 px-4 py-3 text-sm outline-none focus:border-[#E87F24]" placeholder="Share the full context so we can respond with the right next step." />
+              </label>
               <button type="submit" className={`inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-semibold ${tone.action}`}>Send message</button>
             </form>
           </div>

@@ -1,50 +1,56 @@
-﻿import { PageShell } from '@/components/shared/page-shell'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-
-const services = [
-  { name: 'Web App', status: 'Operational' },
-  { name: 'API', status: 'Operational' },
-  { name: 'Media CDN', status: 'Operational' },
-]
-
-const incidents = [
-  { date: 'Mar 12, 2026', title: 'Delayed notifications', status: 'Resolved' },
-  { date: 'Feb 22, 2026', title: 'Search indexing lag', status: 'Resolved' },
-]
+import { BusinessInfoPage } from '@/components/shared/business-info-page'
 
 export default function StatusPage() {
   return (
-    <PageShell
+    <BusinessInfoPage
+      eyebrow="Resources"
       title="System Status"
-      description="Real-time uptime and service health."
-    >
-      <div className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-3">
-          {services.map((service) => (
-            <Card key={service.name} className="border-border bg-card">
-              <CardContent className="p-6">
-                <h2 className="text-lg font-semibold text-foreground">{service.name}</h2>
-                <Badge className="mt-3" variant="secondary">{service.status}</Badge>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-        <Card className="border-border bg-card">
-          <CardContent className="p-6">
-            <h3 className="text-lg font-semibold text-foreground">Incident History</h3>
-            <div className="mt-4 space-y-3">
-              {incidents.map((incident) => (
-                <div key={incident.title} className="rounded-lg border border-border bg-secondary/40 px-4 py-3">
-                  <div className="text-xs text-muted-foreground">{incident.date}</div>
-                  <div className="text-sm font-medium text-foreground">{incident.title}</div>
-                  <div className="text-xs text-muted-foreground">{incident.status}</div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </PageShell>
+      description="Real-time visibility into platform health across publishing, search, media delivery, and account services."
+      actions={[
+        { label: 'Support center', href: '/help', variant: 'outline' },
+        { label: 'Report incident', href: '/contact' },
+      ]}
+      metrics={[
+        { value: '99.97%', label: '30-day uptime' },
+        { value: '0', label: 'Critical outages today' },
+        { value: '2m', label: 'Alert propagation' },
+        { value: '14m', label: 'Avg. incident resolve' },
+      ]}
+      cards={[
+        {
+          title: 'Publishing services: Operational',
+          description: 'Listing and classified create/update actions are processing normally with expected response times.',
+        },
+        {
+          title: 'Search services: Operational',
+          description: 'Query performance and indexing throughput are healthy across categories and local routes.',
+        },
+        {
+          title: 'Media delivery: Operational',
+          description: 'Image and asset delivery remains stable across mobile and desktop traffic patterns.',
+        },
+        {
+          title: 'Auth and account: Operational',
+          description: 'Sign-in, session continuity, and account update workflows are functioning as expected.',
+        },
+      ]}
+      lists={[
+        {
+          title: 'Recent incidents',
+          items: [
+            'Apr 08, 2026: Search indexing lag in one region (resolved)',
+            'Mar 26, 2026: Delayed media processing for uploads (resolved)',
+            'Mar 11, 2026: Elevated auth retry volume (resolved)',
+            'Feb 20, 2026: Intermittent dashboard timeout (resolved)',
+          ],
+        },
+      ]}
+      cta={{
+        title: 'Seeing an issue not listed here?',
+        description: 'Share the exact page, time, and action so we can investigate quickly.',
+        actionLabel: 'Submit a status report',
+        actionHref: '/contact',
+      }}
+    />
   )
 }
