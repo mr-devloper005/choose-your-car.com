@@ -1,29 +1,52 @@
-﻿import { PageShell } from '@/components/shared/page-shell'
-import { Card, CardContent } from '@/components/ui/card'
-
-const sections = [
-  { title: 'Essential Cookies', body: 'Required for authentication and core features.' },
-  { title: 'Analytics Cookies', body: 'Help us understand how the platform is used.' },
-  { title: 'Preference Cookies', body: 'Remember your settings and saved filters.' },
-]
+import { BusinessInfoPage } from '@/components/shared/business-info-page'
 
 export default function CookiesPage() {
   return (
-    <PageShell
+    <BusinessInfoPage
+      eyebrow="Legal"
       title="Cookie Policy"
-      description="Details about the cookies we use."
-    >
-      <Card className="border-border bg-card">
-        <CardContent className="p-6 space-y-4">
-          <p className="text-xs text-muted-foreground">Last updated: March 16, 2026</p>
-          {sections.map((section) => (
-            <div key={section.title} className="rounded-lg border border-border bg-secondary/40 p-4">
-              <h3 className="text-sm font-semibold text-foreground">{section.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{section.body}</p>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-    </PageShell>
+      description="Details on essential, analytics, and preference cookies used to keep the platform reliable and relevant."
+      metrics={[
+        { value: 'April 18, 2026', label: 'Last updated' },
+        { value: 'Essential', label: 'Always active' },
+        { value: 'Configurable', label: 'Preference controls' },
+        { value: 'Session + persistent', label: 'Cookie types' },
+      ]}
+      cards={[
+        {
+          title: 'Essential cookies',
+          description: 'Required for account sign-in, session continuity, security checks, and core navigation behavior.',
+        },
+        {
+          title: 'Analytics cookies',
+          description: 'Used to understand page performance and improve listing/classified discovery pathways.',
+        },
+        {
+          title: 'Preference cookies',
+          description: 'Remember selected filters, locale hints, and interface settings for repeat visits.',
+        },
+        {
+          title: 'Cookie management',
+          description: 'Browser settings and in-product controls allow you to update non-essential cookie choices.',
+        },
+      ]}
+      lists={[
+        {
+          title: 'How we handle cookies',
+          items: [
+            'Minimum required scope for each cookie category',
+            'Documented retention windows and review cycles',
+            'Secure transport and modern browser constraints',
+            'Transparent updates when policy changes',
+          ],
+        },
+      ]}
+      cta={{
+        title: 'Need help with cookie settings?',
+        description: 'Support can guide you through browser and account-level cookie preference options.',
+        actionLabel: 'Get support',
+        actionHref: '/help',
+      }}
+    />
   )
 }

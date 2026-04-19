@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import {
-  LayoutDashboard,
   FileText,
   Store,
   Tag,
@@ -14,7 +13,6 @@ import {
   Eye,
   TrendingUp,
   TrendingDown,
-  Plus,
   ArrowRight,
   Calendar,
   Bell,
@@ -279,34 +277,6 @@ export default function DashboardPage() {
                 <Settings className="h-4 w-4" />
               </Link>
             </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create New
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                  <Link href="/dashboard/articles/new">
-                    <FileText className="h-4 w-4 mr-2" />
-                    New Article
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/dashboard/listings/new">
-                    <Store className="h-4 w-4 mr-2" />
-                    New Listing
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/dashboard/ads/new">
-                    <Tag className="h-4 w-4 mr-2" />
-                    New Ad
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
         </div>
 

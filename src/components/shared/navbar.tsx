@@ -68,22 +68,22 @@ const variantClasses = {
 
 const directoryPalette = {
   'directory-clean': {
-    shell: 'border-b border-slate-200 bg-white/94 text-slate-950 shadow-[0_1px_0_rgba(15,23,42,0.04)] backdrop-blur-xl',
-    logo: 'rounded-2xl border border-slate-200 bg-slate-50',
-    nav: 'text-slate-600 hover:text-slate-950',
-    search: 'border border-slate-200 bg-slate-50 text-slate-600',
-    cta: 'bg-slate-950 text-white hover:bg-slate-800',
-    post: 'border border-slate-200 bg-white text-slate-950 hover:bg-slate-50',
-    mobile: 'border-t border-slate-200 bg-white',
+    shell: 'border-b border-[#73A5CA]/30 bg-[linear-gradient(90deg,#73A5CA_0%,#FFC81E_58%,#E87F24_100%)] text-[#1f2d3a] shadow-[0_16px_36px_rgba(35,40,52,0.16)] backdrop-blur-xl',
+    logo: 'rounded-2xl border border-white/45 bg-white/30',
+    nav: 'text-[#2b3d4f] hover:text-[#1f2d3a]',
+    search: 'border border-white/45 bg-[#FEFDDF]/90 text-[#2b3d4f]',
+    cta: 'bg-[#E87F24] text-[#FEFDDF] hover:bg-[#E87F24]/90',
+    post: 'border border-white/45 bg-[#FEFDDF]/92 text-[#1f2d3a] hover:bg-[#FEFDDF]',
+    mobile: 'border-t border-white/35 bg-[#FFC81E]/95',
   },
   'market-utility': {
-    shell: 'border-b border-[#d7deca] bg-[#f4f6ef]/96 text-[#1f2617] shadow-[0_1px_0_rgba(64,76,34,0.06)] backdrop-blur-xl',
-    logo: 'rounded-xl border border-[#d7deca] bg-white',
-    nav: 'text-[#56604b] hover:text-[#1f2617]',
-    search: 'border border-[#d7deca] bg-white text-[#56604b]',
-    cta: 'bg-[#1f2617] text-[#edf5dc] hover:bg-[#2f3a24]',
-    post: 'border border-[#d7deca] bg-white text-[#1f2617] hover:bg-[#eef2e4]',
-    mobile: 'border-t border-[#d7deca] bg-[#f4f6ef]',
+    shell: 'border-b border-[#73A5CA]/30 bg-[linear-gradient(90deg,#73A5CA_0%,#FFC81E_58%,#E87F24_100%)] text-[#1f2d3a] shadow-[0_16px_36px_rgba(35,40,52,0.16)] backdrop-blur-xl',
+    logo: 'rounded-xl border border-white/45 bg-white/30',
+    nav: 'text-[#2b3d4f] hover:text-[#1f2d3a]',
+    search: 'border border-white/45 bg-[#FEFDDF]/90 text-[#2b3d4f]',
+    cta: 'bg-[#E87F24] text-[#FEFDDF] hover:bg-[#E87F24]/90',
+    post: 'border border-white/45 bg-[#FEFDDF]/92 text-[#1f2d3a] hover:bg-[#FEFDDF]',
+    mobile: 'border-t border-white/35 bg-[#FFC81E]/95',
   },
 } as const
 
@@ -97,7 +97,13 @@ export function Navbar() {
   const { isAuthenticated } = useAuth()
   const { recipe } = getFactoryState()
 
-  const navigation = useMemo(() => SITE_CONFIG.tasks.filter((task) => task.enabled && task.key !== 'profile'), [])
+  const navigation = useMemo(
+    () =>
+      SITE_CONFIG.tasks
+        .filter((task) => task.enabled && task.key !== 'profile')
+        .filter((task) => ['listing', 'classified'].includes(task.key)),
+    []
+  )
   const primaryNavigation = navigation.slice(0, 5)
   const mobileNavigation = navigation.map((task) => ({
     name: task.label,
@@ -112,54 +118,55 @@ export function Navbar() {
 
     return (
       <header className={cn('sticky top-0 z-50 w-full', palette.shell)}>
-        <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <nav className="mx-auto grid h-20 max-w-7xl grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-4 px-4 sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-4">
             <Link href="/" className="flex shrink-0 items-center gap-3">
-              <div className={cn('flex h-12 w-12 items-center justify-center overflow-hidden p-1.5', palette.logo)}>
-                <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+              <div className={cn('flex h-12 w-12 items-center justify-center overflow-hidden p-0.5 shadow-[0_10px_25px_rgba(0,0,0,0.2)]', palette.logo)}>
+                <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full scale-[1.22] object-contain" />
               </div>
               <div className="min-w-0 hidden sm:block">
                 <span className="block truncate text-xl font-semibold">{SITE_CONFIG.name}</span>
-                <span className="block text-[10px] uppercase tracking-[0.24em] opacity-60">{siteContent.navbar.tagline}</span>
+                <span className="block max-w-[280px] truncate text-[10px] uppercase tracking-[0.24em] text-[#2b3d4f]/80">{siteContent.navbar.tagline}</span>
               </div>
             </Link>
+          </div>
 
-            <div className="hidden items-center gap-5 xl:flex">
+          <div className="hidden min-w-0 items-center justify-center lg:flex">
+            <form action="/search" className={cn('flex w-full max-w-[560px] items-center gap-3 rounded-full px-4 py-2.5', palette.search)}>
+              <input type="hidden" name="master" value="1" />
+              <Search className="h-4 w-4 shrink-0" />
+              <input
+                name="q"
+                placeholder="Search listings, services, and local offers"
+                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-[#2b3d4f]/70"
+              />
+              <div className="hidden items-center gap-1 text-xs text-[#2b3d4f]/85 xl:flex">
+                <MapPin className="h-3.5 w-3.5" />
+                Local discovery
+              </div>
+              <button type="submit" className="rounded-full bg-[#E87F24] px-4 py-1.5 text-sm font-semibold text-[#FEFDDF] hover:bg-[#E87F24]/90">
+                Search
+              </button>
+            </form>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <div className="hidden items-center gap-2 2xl:flex">
               {primaryNavigation.slice(0, 4).map((task) => {
                 const isActive = pathname.startsWith(task.route)
                 return (
-                  <Link key={task.key} href={task.route} className={cn('text-sm font-semibold transition-colors', isActive ? 'text-foreground' : palette.nav)}>
+                  <Link key={task.key} href={task.route} className={cn('whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold transition-colors', isActive ? 'bg-white/60 text-[#1f2d3a] shadow-[0_6px_18px_rgba(31,45,58,0.12)]' : palette.nav)}>
                     {task.label}
                   </Link>
                 )
               })}
             </div>
-          </div>
-
-          <div className="hidden min-w-0 flex-1 items-center justify-center lg:flex">
-            <div className={cn('flex w-full max-w-xl items-center gap-3 rounded-full px-4 py-3', palette.search)}>
-              <Search className="h-4 w-4" />
-              <span className="text-sm">Find businesses, spaces, and local services</span>
-              <div className="ml-auto hidden items-center gap-1 text-xs opacity-75 md:flex">
-                <MapPin className="h-3.5 w-3.5" />
-                Local discovery
-              </div>
-            </div>
-          </div>
-
-          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-            {primaryTask ? (
-              <Link href={primaryTask.route} className="hidden items-center gap-2 rounded-full border border-current/10 px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] opacity-75 md:inline-flex">
-                <Sparkles className="h-3.5 w-3.5" />
-                {primaryTask.label}
-              </Link>
-            ) : null}
 
             {isAuthenticated ? (
               <NavbarAuthControls />
             ) : (
               <div className="hidden items-center gap-2 md:flex">
-                <Button variant="ghost" size="sm" asChild className="rounded-full px-4">
+                <Button variant="ghost" size="sm" asChild className="rounded-full px-4 text-[#1f2d3a] hover:bg-white/40 hover:text-[#1f2d3a]">
                   <Link href="/login">Sign In</Link>
                 </Button>
                 <Button size="sm" asChild className={cn('rounded-full', palette.cta)}>
@@ -179,15 +186,32 @@ export function Navbar() {
 
         {isMobileMenuOpen && (
           <div className={palette.mobile}>
-            <div className="space-y-2 px-4 py-4">
-              <div className={cn('mb-3 flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium', palette.search)}>
-                <Search className="h-4 w-4" />
-                Find businesses, spaces, and services
+            <div className="space-y-3 px-4 py-4">
+              <form action="/search" className={cn('mb-3 grid gap-2 rounded-2xl p-3', palette.search)}>
+                <input type="hidden" name="master" value="1" />
+                <input
+                  name="q"
+                  placeholder="Search listings, services, and local offers"
+                  className="h-10 rounded-xl border border-white/45 bg-[#FEFDDF] px-3 text-sm text-[#1f2d3a] outline-none placeholder:text-[#2b3d4f]/65"
+                />
+                <button type="submit" className="h-10 rounded-xl bg-[#E87F24] text-sm font-semibold text-[#FEFDDF]">
+                  Search
+                </button>
+              </form>
+
+              <div className="grid grid-cols-2 gap-2">
+                <Link href="/listings" onClick={() => setIsMobileMenuOpen(false)} className="rounded-xl bg-white/45 px-4 py-2.5 text-center text-sm font-semibold text-[#1f2d3a]">
+                  Listings
+                </Link>
+                <Link href="/classifieds" onClick={() => setIsMobileMenuOpen(false)} className="rounded-xl bg-white/45 px-4 py-2.5 text-center text-sm font-semibold text-[#1f2d3a]">
+                  Classifieds
+                </Link>
               </div>
+
               {mobileNavigation.map((item) => {
                 const isActive = pathname.startsWith(item.href)
                 return (
-                  <Link key={item.name} href={item.href} onClick={() => setIsMobileMenuOpen(false)} className={cn('flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition-colors', isActive ? 'bg-foreground text-background' : palette.post)}>
+                  <Link key={item.name} href={item.href} onClick={() => setIsMobileMenuOpen(false)} className={cn('flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition-colors', isActive ? 'bg-[#E87F24] text-[#FEFDDF]' : palette.post)}>
                     <item.icon className="h-5 w-5" />
                     {item.name}
                   </Link>
@@ -210,8 +234,8 @@ export function Navbar() {
       <nav className={cn('mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8', isFloating ? 'h-24 pt-4' : 'h-20')}>
         <div className="flex min-w-0 flex-1 items-center gap-4 lg:gap-7">
           <Link href="/" className="flex shrink-0 items-center gap-3 whitespace-nowrap pr-2">
-            <div className={cn('flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden p-1.5', style.logo)}>
-              <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+            <div className={cn('flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden p-0.5', style.logo)}>
+              <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full scale-[1.22] object-contain" />
             </div>
             <div className="min-w-0 hidden sm:block">
               <span className="block truncate text-xl font-semibold">{SITE_CONFIG.name}</span>
@@ -338,3 +362,4 @@ export function Navbar() {
     </header>
   )
 }
+

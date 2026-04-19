@@ -1,93 +1,65 @@
-import Link from "next/link";
-import { PageShell } from "@/components/shared/page-shell";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { mockTeamMembers } from "@/data/mock-data";
-import { SITE_CONFIG } from "@/lib/site-config";
-
-const highlights = [
-  { label: "Creators onboarded", value: "12k+" },
-  { label: "Bookmarks shared", value: "180k" },
-  { label: "Listings published", value: "8.6k" },
-];
-
-const values = [
-  { title: "Curated by people", description: "We believe trusted recommendations beat endless feeds." },
-  { title: "Designed for focus", description: "Clear, calm UI helps you find the next best resource fast." },
-  { title: "Built to share", description: "Collections make collaboration and knowledge flow effortless." },
-];
+import { BusinessInfoPage } from '@/components/shared/business-info-page'
+import { SITE_CONFIG } from '@/lib/site-config'
 
 export default function AboutPage() {
   return (
-    <PageShell
+    <BusinessInfoPage
+      eyebrow="Company"
       title={`About ${SITE_CONFIG.name}`}
-      description={`${SITE_CONFIG.name} is a modern platform for creators, communities, and curated business discovery.`}
-      actions={
-        <>
-          <Button variant="outline" asChild>
-            <Link href="/team">Meet the Team</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/contact">Contact Us</Link>
-          </Button>
-        </>
-      }
-    >
-      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card className="border-border bg-card">
-          <CardContent className="space-y-4 p-6">
-            <Badge variant="secondary">Our Story</Badge>
-            <h2 className="text-2xl font-semibold text-foreground">
-              A single home for knowledge, discovery, and community.
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              {SITE_CONFIG.name} brings together publishing, listings, and social bookmarking so teams can move faster
-              and keep their best resources close.
-            </p>
-            <div className="grid gap-4 sm:grid-cols-3">
-              {highlights.map((item) => (
-                <div key={item.label} className="rounded-lg border border-border bg-secondary/40 p-4">
-                  <div className="text-2xl font-semibold text-foreground">{item.value}</div>
-                  <div className="text-xs text-muted-foreground">{item.label}</div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-        <div className="space-y-4">
-          {values.map((value) => (
-            <Card key={value.title} className="border-border bg-card">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-foreground">{value.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{value.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-10 grid gap-6 md:grid-cols-3">
-        {mockTeamMembers.map((member) => (
-          <Card key={member.id} className="border-border bg-card transition-transform hover:-translate-y-1">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3">
-                <Avatar className="h-12 w-12">
-                  <AvatarImage src={member.avatar} alt={member.name} />
-                  <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">{member.name}</p>
-                  <p className="text-xs text-muted-foreground">{member.role}</p>
-                </div>
-              </div>
-              <p className="mt-3 text-sm text-muted-foreground">{member.bio}</p>
-              <p className="mt-3 text-xs text-muted-foreground">{member.location}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </PageShell>
-  );
+      description={`${SITE_CONFIG.name} helps people discover trusted local businesses and timely classifieds with cleaner structure, faster scanning, and better local context.`}
+      actions={[
+        { label: 'Meet our team', href: '/team', variant: 'outline' },
+        { label: 'Contact us', href: '/contact' },
+      ]}
+      metrics={[
+        { value: '58k+', label: 'Monthly visitors' },
+        { value: '12k+', label: 'Active listings' },
+        { value: '4.2k+', label: 'Classified posts' },
+        { value: '320+', label: 'Cities covered' },
+      ]}
+      cards={[
+        {
+          title: 'Built for local trust',
+          description:
+            'Every listing surface emphasizes practical details first: category, location, price cues, and response pathways so users can make decisions faster.',
+        },
+        {
+          title: 'Discovery-first architecture',
+          description:
+            'Search, filters, and category navigation are designed for quick scanning on mobile and desktop, reducing friction across the entire browsing journey.',
+        },
+        {
+          title: 'Balanced for businesses and buyers',
+          description:
+            'Businesses get a structured place to be discovered while buyers get faster comparisons and clearer confidence signals before they contact.',
+          href: '/listings',
+          linkLabel: 'Explore listings',
+        },
+        {
+          title: 'Fast-moving classifieds experience',
+          description:
+            'Urgent posts, local deals, and short-lifecycle notices are presented in a compact format that favors speed without losing clarity.',
+          href: '/classifieds',
+          linkLabel: 'Browse classifieds',
+        },
+      ]}
+      lists={[
+        {
+          title: 'What we focus on',
+          items: [
+            'Clear listing metadata and location context',
+            'Reliable publish and update workflow',
+            'Mobile-first discovery and search UX',
+            'Simple, high-intent pathways to action',
+          ],
+        },
+      ]}
+      cta={{
+        title: 'Want to publish your business or offer?',
+        description: 'Create a listing or classified in minutes and start reaching local discovery traffic right away.',
+        actionLabel: 'Create a post',
+        actionHref: '/create/listing',
+      }}
+    />
+  )
 }

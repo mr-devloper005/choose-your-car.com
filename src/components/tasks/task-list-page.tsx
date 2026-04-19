@@ -1,8 +1,9 @@
 import Link from 'next/link'
-import { ArrowRight, Building2, FileText, Image as ImageIcon, LayoutGrid, Tag, User } from 'lucide-react'
+import { ArrowRight, Building2, Clock3, FileText, Image as ImageIcon, LayoutGrid, MapPin, Tag, User } from 'lucide-react'
 import { NavbarShell } from '@/components/shared/navbar-shell'
 import { Footer } from '@/components/shared/footer'
 import { TaskListClient } from '@/components/tasks/task-list-client'
+import { ContentImage } from '@/components/shared/content-image'
 import { SchemaJsonLd } from '@/components/seo/schema-jsonld'
 import { fetchTaskPosts } from '@/lib/task-data'
 import { SITE_CONFIG, getTaskConfig, type TaskKey } from '@/lib/site-config'
@@ -10,6 +11,7 @@ import { CATEGORY_OPTIONS, normalizeCategory } from '@/lib/categories'
 import { taskIntroCopy } from '@/config/site.content'
 import { getFactoryState } from '@/design/factory/get-factory-state'
 import { TASK_LIST_PAGE_OVERRIDE_ENABLED, TaskListPageOverride } from '@/overrides/task-list-page'
+import type { SitePost } from '@/lib/site-connector'
 
 const taskIcons: Record<TaskKey, any> = {
   listing: Building2,
@@ -25,19 +27,92 @@ const taskIcons: Record<TaskKey, any> = {
 }
 
 const variantShells = {
-  'listing-directory': 'bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.08),transparent_24%),linear-gradient(180deg,#f8fbff_0%,#ffffff_100%)]',
-  'listing-showcase': 'bg-[linear-gradient(180deg,#ffffff_0%,#f4f9ff_100%)]',
+  'listing-directory': 'bg-[radial-gradient(circle_at_top_left,rgba(10,132,169,0.14),transparent_26%),linear-gradient(180deg,#FEFDDF_0%,#ffffff_100%)]',
+  'listing-showcase': 'bg-[linear-gradient(180deg,#FEFDDF_0%,#ffffff_100%)]',
   'article-editorial': 'bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.08),transparent_20%),linear-gradient(180deg,#fff8ef_0%,#ffffff_100%)]',
   'article-journal': 'bg-[linear-gradient(180deg,#fffdf9_0%,#f7f1ea_100%)]',
   'image-masonry': 'bg-[linear-gradient(180deg,#09101d_0%,#111c2f_100%)] text-white',
   'image-portfolio': 'bg-[linear-gradient(180deg,#07111f_0%,#13203a_100%)] text-white',
   'profile-creator': 'bg-[linear-gradient(180deg,#0a1120_0%,#101c34_100%)] text-white',
   'profile-business': 'bg-[linear-gradient(180deg,#f6fbff_0%,#ffffff_100%)]',
-  'classified-bulletin': 'bg-[linear-gradient(180deg,#edf3e4_0%,#ffffff_100%)]',
-  'classified-market': 'bg-[linear-gradient(180deg,#f4f6ef_0%,#ffffff_100%)]',
+  'classified-bulletin': 'bg-[linear-gradient(180deg,#ebfbff_0%,#ffffff_100%)]',
+  'classified-market': 'bg-[linear-gradient(180deg,#FEFDDF_0%,#ffffff_100%)]',
   'sbm-curation': 'bg-[linear-gradient(180deg,#fff7ee_0%,#ffffff_100%)]',
   'sbm-library': 'bg-[linear-gradient(180deg,#f7f8fc_0%,#ffffff_100%)]',
 } as const
+
+function getPostImage(post?: SitePost | null) {
+  const media = Array.isArray(post?.media) ? post?.media : []
+  const mediaUrl = media.find((item) => typeof item?.url === 'string' && item.url)?.url
+  const content = post?.content && typeof post.content === 'object' ? (post.content as Record<string, unknown>) : {}
+  const contentImage = Array.isArray(content.images) ? content.images.find((item) => typeof item === 'string' && item) : null
+  const logo = typeof content.logo === 'string' ? content.logo : null
+  return (mediaUrl || contentImage || logo || '/placeholder.svg?height=900&width=1400') as string
+}
+
+function getPostMeta(post?: SitePost | null) {
+  if (!post || typeof post.content !== 'object' || !post.content) return { category: '', location: '', price: '' }
+  const content = post.content as Record<string, unknown>
+  const price =
+    typeof content.price === 'number'
+      ? `$${content.price.toLocaleString('en-US')}`
+      : typeof content.price === 'string'
+        ? content.price
+        : typeof content.priceRange === 'string'
+          ? content.priceRange
+          : ''
+  return {
+    category: typeof content.category === 'string' ? content.category : typeof post.tags?.[0] === 'string' ? post.tags[0] : '',
+    location: typeof content.address === 'string' ? content.address : typeof content.location === 'string' ? content.location : '',
+    price,
+  }
+}
+
+function toTopList(values: string[], max = 5) {
+  const counts = values.reduce<Record<string, number>>((acc, value) => {
+    if (!value) return acc
+    acc[value] = (acc[value] || 0) + 1
+    return acc
+  }, {})
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, max)
+    .map(([label, count]) => ({ label, count }))
+}
+
+function getTaskEnhancementCopy(task: TaskKey) {
+  if (task === 'classified') {
+    return {
+      sectionTitle: 'Classifieds that move faster with better context',
+      sectionBody: 'Browse urgent opportunities with cleaner metadata, quicker filters, and clear action pathways.',
+      pillars: [
+        { title: 'Urgency first', desc: 'Offers, jobs, and notices surfaced for rapid scanning.' },
+        { title: 'Price and location clarity', desc: 'Essential details shown early to reduce back-and-forth.' },
+        { title: 'Action ready', desc: 'Jump from discovery to inquiry in fewer clicks.' },
+      ],
+      links: [
+        { label: 'Browse all classifieds', href: '/classifieds' },
+        { label: 'Search local deals', href: '/search?task=classified' },
+        { label: 'Post a classified', href: '/create/classified' },
+      ],
+    }
+  }
+
+  return {
+    sectionTitle: 'Business listings designed for local discovery',
+    sectionBody: 'Explore trusted businesses with stronger category signals, location-first summaries, and clearer comparison flow.',
+    pillars: [
+      { title: 'Trust cues', desc: 'Structured listing cards with clearer metadata hierarchy.' },
+      { title: 'Discovery flow', desc: 'Navigate by category and area without losing context.' },
+      { title: 'Decision support', desc: 'Compare options quickly before opening full details.' },
+    ],
+    links: [
+      { label: 'Browse all listings', href: '/listings' },
+      { label: 'Search businesses', href: '/search?task=listing' },
+      { label: 'Create a listing', href: '/create/listing' },
+    ],
+  }
+}
 
 export async function TaskListPage({ task, category }: { task: TaskKey; category?: string }) {
   if (TASK_LIST_PAGE_OVERRIDE_ENABLED) {
@@ -61,6 +136,16 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
   const Icon = taskIcons[task] || LayoutGrid
 
   const isDark = ['image-masonry', 'image-portfolio', 'profile-creator'].includes(layoutKey)
+  const spotlightPost = posts[0]
+  const secondaryPosts = posts.slice(1, 5)
+  const topCategories = toTopList(posts.map((post) => getPostMeta(post).category))
+  const topLocations = toTopList(posts.map((post) => getPostMeta(post).location))
+  const intentChips =
+    task === 'listing'
+      ? ['Best rated', 'Open now', 'Family friendly', '24/7 service', 'Verified only', 'Budget options']
+      : ['Urgent deals', 'Today only', 'Price drops', 'Negotiable', 'New listings', 'Top viewed']
+  const enhancementCopy = getTaskEnhancementCopy(task)
+
   const ui = isDark
     ? {
         muted: 'text-slate-300',
@@ -78,11 +163,11 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           button: 'bg-[#2f1d16] text-[#fff4e4] hover:bg-[#452920]',
         }
       : {
-          muted: 'text-slate-600',
-          panel: 'border border-slate-200 bg-white',
-          soft: 'border border-slate-200 bg-slate-50',
-          input: 'border border-slate-200 bg-white text-slate-950',
-          button: 'bg-slate-950 text-white hover:bg-slate-800',
+          muted: 'text-[#73A5CA]',
+          panel: 'border border-[#73A5CA]/18 bg-white shadow-[0_20px_50px_rgba(7,97,125,0.1)]',
+          soft: 'border border-[#73A5CA]/14 bg-[#FEFDDF]',
+          input: 'border border-[#73A5CA]/18 bg-white text-[#1f2d3a]',
+          button: 'bg-[#E87F24] text-white hover:bg-[#E87F24]',
         }
 
   return (
@@ -124,8 +209,8 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           <section className="mb-12 grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
             <div className={`rounded-[2rem] p-7 shadow-[0_24px_70px_rgba(15,23,42,0.07)] ${ui.panel}`}>
               <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] opacity-70"><Icon className="h-4 w-4" /> {taskConfig?.label || task}</div>
-              <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-foreground">{taskConfig?.description || 'Latest posts'}</h1>
-              <p className={`mt-4 max-w-2xl text-sm leading-7 ${ui.muted}`}>Built with a cleaner scan rhythm, stronger metadata grouping, and a structure designed for business discovery rather than editorial reading.</p>
+              <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[#1f2d3a]">{taskConfig?.description || 'Latest posts'}</h1>
+              <p className={`mt-4 max-w-2xl text-sm leading-7 ${ui.muted}`}>Explore trusted local businesses with location-first metadata, practical filters, and quicker action paths.</p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link href={taskConfig?.route || '#'} className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${ui.button}`}>Explore results <ArrowRight className="h-4 w-4" /></Link>
                 <Link href="/search" className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${ui.soft}`}>Open search</Link>
@@ -143,6 +228,99 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
               </div>
               <button type="submit" className={`h-11 rounded-xl text-sm font-medium ${ui.button}`}>Apply filters</button>
             </form>
+          </section>
+        ) : null}
+
+        {(layoutKey === 'listing-directory' || layoutKey === 'listing-showcase' || layoutKey === 'classified-bulletin' || layoutKey === 'classified-market') && spotlightPost ? (
+          <section className="mb-12 grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
+            <div className={`overflow-hidden rounded-[2rem] ${ui.panel}`}>
+              <div className="grid md:grid-cols-[1fr_1fr]">
+                <div className="relative min-h-[260px] overflow-hidden bg-muted">
+                  <ContentImage src={getPostImage(spotlightPost)} alt={spotlightPost.title} fill className="object-cover" />
+                </div>
+                <div className="p-6">
+                  <p className={`text-xs font-semibold uppercase tracking-[0.22em] ${ui.muted}`}>Spotlight {taskConfig?.label || task}</p>
+                  <h2 className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-foreground">{spotlightPost.title}</h2>
+                  <p className={`mt-3 text-sm leading-7 ${ui.muted}`}>{spotlightPost.summary || 'Explore richer details, contact signals, and local context before taking action.'}</p>
+                  <div className="mt-4 flex flex-wrap gap-3 text-xs">
+                    {getPostMeta(spotlightPost).category ? <span className={`rounded-full px-3 py-1 ${ui.soft}`}>{getPostMeta(spotlightPost).category}</span> : null}
+                    {getPostMeta(spotlightPost).location ? <span className={`rounded-full px-3 py-1 ${ui.soft}`}>{getPostMeta(spotlightPost).location}</span> : null}
+                    {getPostMeta(spotlightPost).price ? <span className={`rounded-full px-3 py-1 ${ui.soft}`}>{getPostMeta(spotlightPost).price}</span> : null}
+                  </div>
+                  <Link href={`${taskConfig?.route || '#'}?category=${encodeURIComponent(normalizeCategory(getPostMeta(spotlightPost).category || 'all'))}`} className={`mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ${ui.button}`}>
+                    Explore similar
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid gap-4">
+              <div className={`rounded-[1.6rem] p-5 ${ui.soft}`}>
+                <p className={`text-xs font-semibold uppercase tracking-[0.22em] ${ui.muted}`}>Top categories</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {topCategories.length ? topCategories.map((item) => (
+                    <Link key={item.label} href={`${taskConfig?.route || '#'}?category=${encodeURIComponent(normalizeCategory(item.label))}`} className={`rounded-full px-3 py-1.5 text-xs font-semibold ${ui.panel}`}>
+                      {item.label} <span className={ui.muted}>({item.count})</span>
+                    </Link>
+                  )) : <p className={`text-sm ${ui.muted}`}>Category data will appear as more posts are added.</p>}
+                </div>
+              </div>
+
+              <div className={`rounded-[1.6rem] p-5 ${ui.soft}`}>
+                <p className={`text-xs font-semibold uppercase tracking-[0.22em] ${ui.muted}`}>Popular areas</p>
+                <div className="mt-3 space-y-2">
+                  {topLocations.slice(0, 4).map((item) => (
+                    <div key={item.label} className="flex items-center justify-between text-sm">
+                      <span className="inline-flex items-center gap-2"><MapPin className="h-4 w-4" />{item.label}</span>
+                      <span className={ui.muted}>{item.count} posts</span>
+                    </div>
+                  ))}
+                  {!topLocations.length ? <p className={`text-sm ${ui.muted}`}>Location highlights will appear here.</p> : null}
+                </div>
+              </div>
+
+              <div className={`rounded-[1.6rem] p-5 ${ui.soft}`}>
+                <p className={`text-xs font-semibold uppercase tracking-[0.22em] ${ui.muted}`}>Quick intents</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {intentChips.map((chip) => (
+                    <Link key={chip} href={`/search?q=${encodeURIComponent(chip)}&task=${task}`} className={`rounded-full px-3 py-1.5 text-xs font-semibold ${ui.panel}`}>
+                      {chip}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+        ) : null}
+
+        {(layoutKey === 'listing-directory' || layoutKey === 'listing-showcase' || layoutKey === 'classified-bulletin' || layoutKey === 'classified-market') && secondaryPosts.length ? (
+          <section className={`mb-12 rounded-[2rem] p-6 ${ui.panel}`}>
+            <div className="mb-5 flex items-center justify-between">
+              <div>
+                <p className={`text-xs font-semibold uppercase tracking-[0.22em] ${ui.muted}`}>Recently added</p>
+                <h2 className="mt-2 text-2xl font-semibold text-foreground">Fresh {taskConfig?.label?.toLowerCase() || task} you can act on now.</h2>
+              </div>
+              <Link href={taskConfig?.route || '#'} className="text-sm font-semibold text-primary hover:opacity-80">View all</Link>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {secondaryPosts.map((post) => {
+                const meta = getPostMeta(post)
+                return (
+                  <Link key={post.id} href={`${taskConfig?.route || '#'}?category=${encodeURIComponent(normalizeCategory(meta.category || 'all'))}`} className={`rounded-[1.4rem] p-4 transition hover:-translate-y-0.5 ${ui.soft}`}>
+                    <div className="relative h-28 overflow-hidden rounded-xl">
+                      <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
+                    </div>
+                    <h3 className="mt-3 line-clamp-2 text-sm font-semibold text-foreground">{post.title}</h3>
+                    <p className={`mt-2 line-clamp-2 text-xs ${ui.muted}`}>{post.summary || 'Discover details and contact directly.'}</p>
+                    <div className={`mt-3 flex items-center justify-between text-xs ${ui.muted}`}>
+                      <span>{meta.category || 'General'}</span>
+                      <span className="inline-flex items-center gap-1"><Clock3 className="h-3.5 w-3.5" />New</span>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
           </section>
         ) : null}
 
@@ -203,10 +381,10 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           <section className="mb-12 grid gap-4 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
             <div className={`rounded-[1.8rem] p-6 ${ui.panel}`}>
               <p className={`text-xs uppercase tracking-[0.3em] ${ui.muted}`}>{taskConfig?.label || task}</p>
-              <h1 className="mt-3 text-4xl font-semibold tracking-[-0.05em] text-foreground">Fast-moving notices, offers, and responses in a compact board format.</h1>
+              <h1 className="mt-3 text-4xl font-semibold tracking-[-0.05em] text-[#1f2d3a]">Fast-moving offers, jobs, and local deals in a compact classifieds board.</h1>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              {['Quick to scan', 'Shorter response path', 'Clearer urgency cues'].map((item) => (
+              {['Quick to scan', 'Short response path', 'Clear urgency cues'].map((item) => (
                 <div key={item} className={`rounded-[1.5rem] p-5 ${ui.soft}`}>
                   <p className="text-sm font-semibold">{item}</p>
                 </div>
@@ -237,7 +415,25 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           </section>
         ) : null}
 
-        {intro ? (
+        {(task === 'listing' || task === 'classified') ? (
+          <section className={`mb-12 rounded-[2rem] p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)] sm:p-8 ${ui.panel}`}>
+            <h2 className="text-2xl font-semibold text-foreground">{enhancementCopy.sectionTitle}</h2>
+            <p className={`mt-4 text-sm leading-7 ${ui.muted}`}>{enhancementCopy.sectionBody}</p>
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              {enhancementCopy.pillars.map((pillar) => (
+                <div key={pillar.title} className={`rounded-[1.2rem] p-4 ${ui.soft}`}>
+                  <h3 className="text-sm font-semibold text-foreground">{pillar.title}</h3>
+                  <p className={`mt-2 text-sm leading-6 ${ui.muted}`}>{pillar.desc}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-5 flex flex-wrap gap-4 text-sm">
+              {enhancementCopy.links.map((link) => (
+                <a key={link.href} href={link.href} className="font-semibold text-foreground hover:underline">{link.label}</a>
+              ))}
+            </div>
+          </section>
+        ) : intro ? (
           <section className={`mb-12 rounded-[2rem] p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)] sm:p-8 ${ui.panel}`}>
             <h2 className="text-2xl font-semibold text-foreground">{intro.title}</h2>
             {intro.paragraphs.map((paragraph) => (
@@ -257,3 +453,5 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
     </div>
   )
 }
+
+

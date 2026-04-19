@@ -1,33 +1,53 @@
-import { PageShell } from "@/components/shared/page-shell";
-import { Card, CardContent } from "@/components/ui/card";
-import { SITE_CONFIG } from "@/lib/site-config";
-
-const sections = [
-  { title: "Account Usage", body: "Keep your account secure and follow community guidelines." },
-  {
-    title: "Content Ownership",
-    body: "You own the content you publish and grant the platform a license to display it.",
-  },
-  { title: "Acceptable Use", body: "No spam, harassment, or illegal content." },
-];
+import { BusinessInfoPage } from '@/components/shared/business-info-page'
+import { SITE_CONFIG } from '@/lib/site-config'
 
 export default function TermsPage() {
   return (
-    <PageShell
+    <BusinessInfoPage
+      eyebrow="Legal"
       title="Terms of Service"
-      description={`The rules and guidelines for using ${SITE_CONFIG.name}.`}
-    >
-      <Card className="border-border bg-card">
-        <CardContent className="space-y-4 p-6">
-          <p className="text-xs text-muted-foreground">Last updated: March 16, 2026</p>
-          {sections.map((section) => (
-            <div key={section.title} className="rounded-lg border border-border bg-secondary/40 p-4">
-              <h3 className="text-sm font-semibold text-foreground">{section.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{section.body}</p>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-    </PageShell>
-  );
+      description={`Rules and responsibilities for using ${SITE_CONFIG.name}, including account conduct, content standards, and platform limitations.`}
+      metrics={[
+        { value: 'April 18, 2026', label: 'Last updated' },
+        { value: '13', label: 'Core policy sections' },
+        { value: '24h', label: 'Critical abuse handling' },
+        { value: 'Direct', label: 'Appeal process' },
+      ]}
+      cards={[
+        {
+          title: 'Account responsibilities',
+          description: 'Keep credentials secure, maintain accurate business information, and use platform tools in good faith.',
+        },
+        {
+          title: 'Content ownership and license',
+          description: 'You retain ownership of submitted content while granting platform rights to display and distribute it for service operation.',
+        },
+        {
+          title: 'Acceptable use requirements',
+          description: 'No fraudulent listings, deceptive classifieds, harassment, malicious automation, or unlawful activity.',
+        },
+        {
+          title: 'Enforcement and suspension',
+          description: 'Violations may trigger content removal, account restrictions, or suspension depending on severity and recurrence.',
+        },
+      ]}
+      lists={[
+        {
+          title: 'Key expectations',
+          items: [
+            'Publish truthful and verifiable listing details',
+            'Respect category rules and local regulations',
+            'Respond to moderation requests within required timelines',
+            'Use provided contact paths for disputes and corrections',
+          ],
+        },
+      ]}
+      cta={{
+        title: 'Need policy clarification?',
+        description: 'We can help interpret specific sections relevant to your account or listing workflow.',
+        actionLabel: 'Request clarification',
+        actionHref: '/contact',
+      }}
+    />
+  )
 }
