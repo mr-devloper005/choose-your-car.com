@@ -54,7 +54,7 @@ export function TaskListClient({ task, initialPosts, category }: Props) {
 
   if (!merged.length) {
     return (
-      <div className="rounded-2xl border border-dashed border-border p-10 text-center text-muted-foreground">
+      <div className="rounded-[1.8rem] border border-dashed border-[#73A5CA]/22 bg-[#FEFDDF] p-10 text-center text-[#73A5CA]">
         No posts yet for this section.
       </div>
     );
@@ -72,3 +72,4 @@ export function TaskListClient({ task, initialPosts, category }: Props) {
     </div>
   );
 }
+

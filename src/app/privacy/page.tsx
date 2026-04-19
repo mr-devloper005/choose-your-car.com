@@ -1,29 +1,52 @@
-﻿import { PageShell } from '@/components/shared/page-shell'
-import { Card, CardContent } from '@/components/ui/card'
-
-const sections = [
-  { title: 'Data We Collect', body: 'Account information, usage analytics, and content you submit.' },
-  { title: 'How We Use Data', body: 'To personalize your experience, improve search, and keep the platform secure.' },
-  { title: 'Your Choices', body: 'You can manage email preferences and delete your account at any time.' },
-]
+import { BusinessInfoPage } from '@/components/shared/business-info-page'
 
 export default function PrivacyPage() {
   return (
-    <PageShell
+    <BusinessInfoPage
+      eyebrow="Legal"
       title="Privacy Policy"
-      description="How we collect, use, and protect your information."
-    >
-      <Card className="border-border bg-card">
-        <CardContent className="p-6 space-y-4">
-          <p className="text-xs text-muted-foreground">Last updated: March 16, 2026</p>
-          {sections.map((section) => (
-            <div key={section.title} className="rounded-lg border border-border bg-secondary/40 p-4">
-              <h3 className="text-sm font-semibold text-foreground">{section.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{section.body}</p>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-    </PageShell>
+      description="How we collect, process, and protect personal information across accounts, listings, classifieds, and support workflows."
+      metrics={[
+        { value: 'April 18, 2026', label: 'Last updated' },
+        { value: 'GDPR-ready', label: 'Privacy framework' },
+        { value: 'SOC controls', label: 'Security alignment' },
+        { value: 'DPO contact', label: 'Support available' },
+      ]}
+      cards={[
+        {
+          title: 'Information we collect',
+          description: 'Account profile details, listing/classified content, usage telemetry, and support communication metadata.',
+        },
+        {
+          title: 'How we use information',
+          description: 'To deliver core platform features, improve relevance, prevent abuse, and communicate important account or policy updates.',
+        },
+        {
+          title: 'Data sharing boundaries',
+          description: 'We share data only with vetted processors and infrastructure providers needed to operate and secure the service.',
+        },
+        {
+          title: 'Your controls',
+          description: 'You can update account details, manage communication preferences, and request data export or deletion through support.',
+        },
+      ]}
+      lists={[
+        {
+          title: 'Privacy commitments',
+          items: [
+            'Clear purpose limitation for each data category',
+            'Access controls and audit-ready operational practices',
+            'Retention windows aligned to legal and business necessity',
+            'Prompt response process for privacy requests',
+          ],
+        },
+      ]}
+      cta={{
+        title: 'Questions about your data?',
+        description: 'Our team can explain what is stored and how request handling works in plain language.',
+        actionLabel: 'Contact privacy team',
+        actionHref: '/contact',
+      }}
+    />
   )
 }

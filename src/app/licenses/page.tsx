@@ -1,28 +1,52 @@
-﻿import { PageShell } from '@/components/shared/page-shell'
-import { Card, CardContent } from '@/components/ui/card'
-
-const licenses = [
-  { name: 'Next.js', description: 'MIT License' },
-  { name: 'React', description: 'MIT License' },
-  { name: 'Tailwind CSS', description: 'MIT License' },
-]
+import { BusinessInfoPage } from '@/components/shared/business-info-page'
 
 export default function LicensesPage() {
   return (
-    <PageShell
+    <BusinessInfoPage
+      eyebrow="Legal"
       title="Licenses"
-      description="Open source licenses and acknowledgements."
-    >
-      <Card className="border-border bg-card">
-        <CardContent className="p-6 space-y-3">
-          {licenses.map((license) => (
-            <div key={license.name} className="rounded-lg border border-border bg-secondary/40 p-4">
-              <h3 className="text-sm font-semibold text-foreground">{license.name}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{license.description}</p>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-    </PageShell>
+      description="Open-source acknowledgements and licensing attributions used by the platform."
+      metrics={[
+        { value: '36+', label: 'OSS packages' },
+        { value: 'MIT-first', label: 'Primary license mix' },
+        { value: 'Tracked', label: 'Version records' },
+        { value: 'Quarterly', label: 'Review cycle' },
+      ]}
+      cards={[
+        {
+          title: 'Framework stack',
+          description: 'Core framework dependencies include Next.js, React, and related runtime tooling with permissive licenses.',
+        },
+        {
+          title: 'UI and accessibility tooling',
+          description: 'Design system primitives and utility libraries are selected for maintainability, accessibility, and license clarity.',
+        },
+        {
+          title: 'Build and developer tooling',
+          description: 'Compilation, linting, and formatting packages are reviewed for compatibility with project distribution policies.',
+        },
+        {
+          title: 'Attribution operations',
+          description: 'We keep dependency audits and license records updated as package versions evolve over time.',
+        },
+      ]}
+      lists={[
+        {
+          title: 'Representative package licenses',
+          items: [
+            'Next.js - MIT License',
+            'React - MIT License',
+            'Tailwind CSS - MIT License',
+            'Lucide - ISC License',
+          ],
+        },
+      ]}
+      cta={{
+        title: 'Need full dependency attribution details?',
+        description: 'Reach out for complete third-party notices and version-specific compliance references.',
+        actionLabel: 'Request details',
+        actionHref: '/contact',
+      }}
+    />
   )
 }
