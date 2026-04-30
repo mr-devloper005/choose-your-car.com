@@ -88,11 +88,13 @@ export function TaskPostCard({
   href,
   taskKey,
   compact,
+  homeVariant,
 }: {
   post: SitePost
   href: string
   taskKey?: TaskKey
   compact?: boolean
+  homeVariant?: 'directory-featured'
 }) {
   const content = getContent(post)
   const image = getImageUrl(post, content)
@@ -111,10 +113,40 @@ export function TaskPostCard({
   const isDirectorySurface = isDirectoryProduct && (variant === 'listing' || variant === 'profile')
   const ui = getDirectoryUiPreset()
 
+  if (homeVariant === 'directory-featured') {
+    return (
+      <Link href={href} className="group flex h-full flex-col overflow-hidden rounded-[10px] border border-[#0f172a]/12 bg-white shadow-[0_12px_28px_rgba(15,23,42,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_44px_rgba(15,23,42,0.12)]">
+        <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
+          <ContentImage src={image} alt={altText} fill sizes={imageSizes} quality={75} className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" intrinsicWidth={960} intrinsicHeight={720} />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-80" />
+          <span className={`absolute left-3 top-3 inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${ui.badge}`}>
+            <Tag className="h-3.5 w-3.5" />
+            {category}
+          </span>
+        </div>
+        <div className="flex min-w-0 flex-1 flex-col p-4">
+          <div className="flex items-start justify-between gap-3">
+            <h3 className={`line-clamp-2 text-lg font-semibold leading-snug ${ui.title}`}>{post.title}</h3>
+            <ArrowUpRight className={`mt-1 h-4 w-4 shrink-0 ${ui.eyebrow}`} />
+          </div>
+          <p className={`mt-2 line-clamp-3 text-sm leading-7 ${ui.muted}`}>{getExcerpt(content.description || post.summary, 150) || 'Explore this local listing.'}</p>
+          <div className="mt-4 flex flex-wrap gap-2 text-xs">
+            {content.location ? <span className={`inline-flex items-center gap-1 px-2 py-1 ${ui.chip}`}><MapPin className="h-3.5 w-3.5" />{content.location}</span> : null}
+            {content.email ? <span className={`inline-flex items-center gap-1 px-2 py-1 ${ui.chip}`}><Mail className="h-3.5 w-3.5" />{content.email}</span> : null}
+          </div>
+          <div className={`mt-auto pt-4 text-sm font-semibold ${ui.eyebrow}`}>View profile</div>
+        </div>
+      </Link>
+    )
+  }
+
   if (isDirectorySurface) {
     return (
-      <Link href={href} className={`${ui.cardFrame}`}>
-        <div className={`relative overflow-hidden bg-slate-100 ${ui.cardImage}`}>
+      <Link
+        href={href}
+        className={`${ui.cardFrame} ![grid-template-columns:minmax(0,1fr)] sm:![grid-template-columns:minmax(0,1fr)] md:![grid-template-columns:minmax(0,1fr)] lg:![grid-template-columns:minmax(0,1fr)] xl:![grid-template-columns:minmax(0,1fr)] 2xl:![grid-template-columns:240px_minmax(0,1fr)]`}
+      >
+        <div className={`relative overflow-hidden bg-slate-100 aspect-[16/10] 2xl:aspect-auto 2xl:min-h-[210px]`}>
           <ContentImage src={image} alt={altText} fill sizes={imageSizes} quality={75} className="object-cover transition-transform duration-500 group-hover:scale-[1.035]" intrinsicWidth={960} intrinsicHeight={720} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-80" />
           <div className="absolute left-3 top-3 flex flex-wrap gap-2">
