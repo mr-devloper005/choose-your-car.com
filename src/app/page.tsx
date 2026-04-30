@@ -252,7 +252,13 @@ function DirectoryHome({ primaryTask, enabledTasks, listingPosts, profilePosts, 
         </div>
         <div className="mt-8 grid gap-6 lg:grid-cols-4">
           {featuredListings.map((post) => (
-            <TaskPostCard key={post.id} post={post} href={getTaskHref(featuredTaskKey, post.slug)} taskKey={featuredTaskKey} />
+            <TaskPostCard
+              key={post.id}
+              post={post}
+              href={getTaskHref(featuredTaskKey, post.slug)}
+              taskKey={featuredTaskKey}
+              homeVariant="directory-featured"
+            />
           ))}
         </div>
       </section>
