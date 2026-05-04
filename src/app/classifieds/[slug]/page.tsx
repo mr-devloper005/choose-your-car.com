@@ -4,6 +4,7 @@ import { fetchTaskPostBySlug } from "@/lib/task-data";
 import { buildPostMetadata } from "@/lib/seo";
 
 export const revalidate = 3;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const post = await fetchTaskPostBySlug("classified", params.slug);
