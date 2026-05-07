@@ -7,13 +7,13 @@ export const revalidate = 3;
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const post = (await fetchTaskPosts("classified", 1000, { fresh: true, allowMockFallback: false })).find((item) => item.slug === params.slug) || null;
+  const post = (await fetchTaskPosts("classified", 30)).find((item) => item.slug === params.slug) || (await fetchTaskPosts("classified", 1000, { fresh: true, allowMockFallback: false })).find((item) => item.slug === params.slug) || null;
   if (!post) return {};
   return buildPostMetadata("classified", post);
 }
 
 export default async function ClassifiedDetailPage({ params }: { params: { slug: string } }) {
-  const post = (await fetchTaskPosts("classified", 1000, { fresh: true, allowMockFallback: false })).find((item) => item.slug === params.slug) || null;
+  const post = (await fetchTaskPosts("classified", 30)).find((item) => item.slug === params.slug) || (await fetchTaskPosts("classified", 1000, { fresh: true, allowMockFallback: false })).find((item) => item.slug === params.slug) || null;
   if (!post) notFound();
   return <TaskDetailPage task="classified" slug={params.slug} />;
 }
