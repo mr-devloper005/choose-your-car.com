@@ -123,17 +123,19 @@ const buildMapEmbedUrl = (
   return null;
 };
 
-export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: string }) {
+export async function TaskDetailPage({ task, slug, initialPost }: { task: TaskKey; slug: string; initialPost?: SitePost | null }) {
   if (TASK_DETAIL_PAGE_OVERRIDE_ENABLED) {
     return await TaskDetailPageOverride({ task, slug });
   }
 
   const taskConfig = getTaskConfig(task);
-  let post: SitePost | null = null;
-  try {
-    post = await fetchTaskPostBySlug(task, slug);
-  } catch (error) {
-    console.warn("Failed to load post detail", error);
+  let post: SitePost | null = initialPost || null;
+  if (!post) {
+    try {
+      post = await fetchTaskPostBySlug(task, slug);
+    } catch (error) {
+      console.warn("Failed to load post detail", error);
+    }
   }
 
   if (!post) {
