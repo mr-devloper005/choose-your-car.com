@@ -71,13 +71,17 @@ export const fetchTaskPostBySlug = async (task: TaskKey, slug: string) => {
     feed?.posts.find((post) => post.slug === slug && getPostType(post) === type) || null;
 
   try {
-    const cachedFeed = await fetchSiteFeed(1000, { task: type });
-    const cachedMatch = resolveFromFeed(cachedFeed);
-    if (cachedMatch) return cachedMatch;
+    const prioritizedFeeds = [
+      await fetchSiteFeed(1000, { fresh: true, task: type }),
+      await fetchSiteFeed(1000, { fresh: true }),
+      await fetchSiteFeed(1000, { task: type }),
+      await fetchSiteFeed(1000),
+    ];
 
-    const freshFeed = await fetchSiteFeed(1000, { fresh: true, task: type });
-    const freshMatch = resolveFromFeed(freshFeed);
-    if (freshMatch) return freshMatch;
+    for (const feed of prioritizedFeeds) {
+      const match = resolveFromFeed(feed);
+      if (match) return match;
+    }
   } catch {
     // fall through to mock data
   }
