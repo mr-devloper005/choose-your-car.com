@@ -24,6 +24,26 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/articles',
+        destination: '/article',
+        permanent: true,
+      },
+      {
+        source: '/articles/:slug*',
+        destination: '/article/:slug*',
+        permanent: true,
+      },
+      {
+        source: '/classifieds',
+        destination: '/classified',
+        permanent: true,
+      },
+      {
+        source: '/classifieds/:slug*',
+        destination: '/classified/:slug*',
+        permanent: true,
+      },
+      {
         source: '/listings',
         destination: '/listing',
         permanent: true,
@@ -31,6 +51,16 @@ const nextConfig = {
       {
         source: '/listings/:slug*',
         destination: '/listing/:slug*',
+        permanent: true,
+      },
+      {
+        source: '/images',
+        destination: '/image',
+        permanent: true,
+      },
+      {
+        source: '/images/:slug*',
+        destination: '/image/:slug*',
         permanent: true,
       },
       {
@@ -49,12 +79,36 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: '/article',
+        destination: '/articles',
+      },
+      {
+        source: '/article/:slug*',
+        destination: '/articles/:slug*',
+      },
+      {
+        source: '/classified',
+        destination: '/classifieds',
+      },
+      {
+        source: '/classified/:slug*',
+        destination: '/classifieds/:slug*',
+      },
+      {
         source: '/listing',
         destination: '/listings',
       },
       {
         source: '/listing/:slug*',
         destination: '/listings/:slug*',
+      },
+      {
+        source: '/image',
+        destination: '/images',
+      },
+      {
+        source: '/image/:slug*',
+        destination: '/images/:slug*',
       },
       {
         source: '/user',
@@ -96,6 +150,7 @@ const nextConfig = {
       },
     ];
   },
+
 }
 
 export default nextConfig
