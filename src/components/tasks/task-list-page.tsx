@@ -247,7 +247,6 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
                   <div className="mt-4 flex flex-wrap gap-3 text-xs">
                     {getPostMeta(spotlightPost).category ? <span className={`rounded-full px-3 py-1 ${ui.soft}`}>{getPostMeta(spotlightPost).category}</span> : null}
                     {getPostMeta(spotlightPost).location ? <span className={`rounded-full px-3 py-1 ${ui.soft}`}>{getPostMeta(spotlightPost).location}</span> : null}
-                    {getPostMeta(spotlightPost).price ? <span className={`rounded-full px-3 py-1 ${ui.soft}`}>{getPostMeta(spotlightPost).price}</span> : null}
                   </div>
                   <div className={`mt-5 inline-flex items-center gap-2 text-sm font-semibold ${ui.button}`}>
                     View details

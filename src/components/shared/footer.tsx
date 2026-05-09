@@ -27,15 +27,11 @@ const footerLinks = {
     { name: 'About', href: '/about' },
     { name: 'Team', href: '/team' },
     { name: 'Careers', href: '/careers' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'Press', href: '/press' },
     { name: 'Contact', href: '/contact' },
   ],
   resources: [
     { name: 'Help Center', href: '/help' },
     { name: 'Community', href: '/community' },
-    { name: 'Developers', href: '/developers' },
-    { name: 'Status', href: '/status' },
   ],
   legal: [
     { name: 'Privacy', href: '/privacy' },
@@ -176,17 +172,6 @@ export function Footer() {
   return (
     <footer className="border-t border-[#73A5CA]/35 bg-[linear-gradient(180deg,#73A5CA_0%,#FFC81E_58%,#E87F24_100%)] text-[#1f2d3a]">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="mb-10 grid gap-6 rounded-[2rem] border border-white/20 bg-white/10 p-6 backdrop-blur md:grid-cols-[1fr_auto] md:items-center">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#2b3d4f]/85">Stay in the loop</p>
-            <h3 className="mt-2 text-2xl font-semibold text-[#1f2d3a]">Get new listings and local offers in your inbox.</h3>
-          </div>
-          <form className="flex w-full max-w-md items-center gap-2">
-            <input className="h-11 flex-1 rounded-full border border-white/45 bg-[#FEFDDF]/88 px-4 text-sm text-[#1f2d3a] placeholder:text-[#2b3d4f]/60 focus:outline-none" placeholder="Email address" />
-            <button type="button" className="h-11 rounded-full bg-[#E87F24] px-5 text-sm font-semibold text-[#FEFDDF] hover:bg-[#E87F24]/90">Subscribe</button>
-          </form>
-        </div>
-
         <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr_0.8fr]">
           <div>
             <Link href="/" className="flex items-center gap-3">
