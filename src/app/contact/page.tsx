@@ -143,18 +143,6 @@ export default function ContactPage() {
             <h2 className="text-2xl font-semibold">Send a message</h2>
             <p className={`mt-2 text-sm ${tone.muted}`}>We usually respond within one business day.</p>
             
-            <div className={`mt-6 rounded-[1.6rem] p-5 ${tone.soft}`}>
-              <h3 className="text-lg font-semibold">Email us directly</h3>
-              <p className={`mt-2 text-sm ${tone.muted}`}>Click below to open your email client:</p>
-              <a
-                href={`mailto:${CONTACT_EMAIL}`}
-                className={`mt-4 inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.action}`}
-              >
-                <Mail className="h-4 w-4" />
-                {CONTACT_EMAIL}
-              </a>
-            </div>
-
             <form className="mt-6 grid gap-4">
               <label className="grid gap-2 text-sm font-medium">
                 Name
@@ -172,7 +160,6 @@ export default function ContactPage() {
                 Message
                 <textarea className="min-h-[180px] rounded-2xl border border-[#73A5CA]/22 bg-[#FEFDDF]/60 px-4 py-3 text-sm outline-none focus:border-[#E87F24]" placeholder="Share the full context so we can respond with the right next step." />
               </label>
-              <button type="submit" className={`inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-semibold ${tone.action}`}>Send message</button>
             </form>
           </div>
         </section>
