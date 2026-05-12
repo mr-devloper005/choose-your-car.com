@@ -198,9 +198,6 @@ export function ListingCard({ listing }: { listing: Listing }) {
                 {listing.isVerified && (
                   <BadgeCheck className="h-4 w-4 text-accent" />
                 )}
-                <span className="text-sm font-medium">
-                  {listing.priceRange || (listing.price && `$${listing.price}/mo`)}
-                </span>
               </div>
             </div>
           </CardContent>
@@ -233,9 +230,6 @@ export function ClassifiedAdCard({ ad }: { ad: ClassifiedAd }) {
               <Badge variant="secondary" className="text-xs">
                 {ad.category}
               </Badge>
-              <span className="text-sm font-semibold text-foreground">
-                {ad.currency} {ad.price}
-              </span>
             </div>
             <h3 className="mb-1 font-semibold text-foreground">{ad.title}</h3>
             <div className="mb-3 flex items-center gap-1 text-sm text-muted-foreground">
