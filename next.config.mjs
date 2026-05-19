@@ -79,38 +79,6 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/article',
-        destination: '/articles',
-      },
-      {
-        source: '/article/:slug*',
-        destination: '/articles/:slug*',
-      },
-      {
-        source: '/classified',
-        destination: '/classifieds',
-      },
-      {
-        source: '/classified/:slug*',
-        destination: '/classifieds/:slug*',
-      },
-      {
-        source: '/listing',
-        destination: '/listings',
-      },
-      {
-        source: '/listing/:slug*',
-        destination: '/listings/:slug*',
-      },
-      {
-        source: '/image',
-        destination: '/images',
-      },
-      {
-        source: '/image/:slug*',
-        destination: '/images/:slug*',
-      },
-      {
         source: '/user',
         destination: '/profile',
       },
