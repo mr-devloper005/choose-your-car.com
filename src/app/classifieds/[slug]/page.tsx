@@ -5,11 +5,15 @@ import { buildPostMetadata } from "@/lib/seo";
 export const revalidate = 3;
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const post = await fetchTaskPostBySlug("classified", params.slug);
+type PageProps = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: PageProps) {
+  const { slug } = await params;
+  const post = await fetchTaskPostBySlug("classified", slug);
   return post ? buildPostMetadata("classified", post) : {};
 }
 
-export default async function ClassifiedDetailPage({ params }: { params: { slug: string } }) {
-  return <TaskDetailPage task="classified" slug={params.slug} />;
+export default async function ClassifiedDetailPage({ params }: PageProps) {
+  const { slug } = await params;
+  return <TaskDetailPage task="classified" slug={slug} />;
 }
